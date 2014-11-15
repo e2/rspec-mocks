@@ -170,6 +170,18 @@ module RSpec
           end
         end
       end
+
+      describe "#when_declaring_verifying_double" do
+        it "captures the supplied blocks" do
+          block = proc { |ref| ref }
+          block2 = proc { |ref| ref }
+          RSpec.configuration.mock_with :rspec do |config|
+            config.when_declaring_verifying_double(&block)
+            config.when_declaring_verifying_double(&block2)
+            expect(config.on_declaring_verifying_double).to eq [block, block2]
+          end
+        end
+      end
     end
   end
 end

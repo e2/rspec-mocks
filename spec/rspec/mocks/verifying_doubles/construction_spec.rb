@@ -3,6 +3,10 @@ require 'support/doubled_classes'
 module RSpec
   module Mocks
     RSpec.describe 'Constructing a verifying double' do
+      class ConstructVerifyingDoubleTestClass
+      end
+      let(:test_class) { ConstructVerifyingDoubleTestClass }
+
       describe 'instance doubles' do
         it 'cannot be constructed with a non-module object' do
           expect {
@@ -14,6 +18,19 @@ module RSpec
           o = instance_double(Struct.new(:defined_method), :defined_method => 1)
 
           expect(o.defined_method).to eq(1)
+        end
+
+        it 'constant can be customised' do
+          RSpec.configuration.mock_with(:rspec) do |c|
+            allow(c).to receive(:on_declaring_verifying_double) do
+              [ proc { |type| type.customise! } ]
+            end
+          end
+
+          expect(test_class).to receive(:customise!) do
+            allow(test_class).to receive(:public_method_defined?).with(:some_method_defined_by_customise!) { true }
+          end
+          instance_double("#{test_class.inspect}", some_method_defined_by_customise!: true)
         end
       end
 

@@ -361,6 +361,10 @@ module RSpec
                 "Disable check with verify_doubled_constant_names configuration option."
         end
 
+        RSpec::Mocks.configuration.on_declaring_verifying_double.each do |block|
+          block.call(ref.const)
+        end
+
         declare_double(type, ref, *args)
       end
 
