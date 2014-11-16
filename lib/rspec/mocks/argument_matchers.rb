@@ -231,11 +231,27 @@ module RSpec
         end
 
         def ===(actual)
-          Set.new(actual).superset?(Set.new(@expected))
+          Set.new(@expected).all? do |expected_element|
+            Set.new(actual).any? do |actual_element|
+              RSpec::Support::FuzzyMatcher.values_match?(expected_element, actual_element)
+            end
+          end
         end
 
         def description
-          "array_including(#{@expected.join(", ")})"
+          "array_including(#{formatted_expected_values})"
+        end
+
+      private
+
+        def formatted_expected_values
+          @expected.map do |x|
+            if RSpec::Support.is_a_matcher?(x)
+              x.description
+            else
+              x
+            end
+          end.join(", ")
         end
       end
 
