@@ -198,7 +198,29 @@ module RSpec
         end
 
         def description(name)
-          "#{name}(#{@expected.inspect.sub(/^\{/, "").sub(/\}$/, "")})"
+          "#{name}(#{formatted_expected_hash.inspect.sub(/^\{/, "").sub(/\}$/, "")})"
+        end
+
+      private
+
+        def formatted_expected_hash
+          Hash[
+            @expected.map do |k, v|
+              if RSpec::Support.is_a_matcher?(k)
+                k.description
+              else
+                k
+              end
+
+              if RSpec::Support.is_a_matcher?(v)
+                v.description
+              else
+                v
+              end
+
+              [k, v]
+            end
+          ]
         end
       end
 

@@ -7,6 +7,20 @@ module RSpec
           expect(HashIncludingMatcher.new(:a => 1).description).to eq "hash_including(:a=>1)"
         end
 
+        it "describes passed matchers" do
+          fake_matcher = Class.new do
+            def self.name
+              "RSpec::Mocks::ArgumentMatchers::"
+            end
+          end.new
+
+          expect(fake_matcher).to receive(:description).with(no_args)
+
+          expect(RSpec::Support.is_a_matcher?(fake_matcher)).to be true
+
+          hash_including(:foo => fake_matcher).description
+        end
+
         describe "passing" do
           it "matches the same hash" do
             expect(hash_including(:a => 1)).to be === {:a => 1}
