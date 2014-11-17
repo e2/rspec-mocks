@@ -47,12 +47,21 @@ module RSpec
             expect(dbl).to receive(:a_message).with(3, array_including(instance_of(klass)))
             dbl.a_message(3, [1, klass.new, 4])
           end
-
         end
 
         context "failing" do
           it "fails when not all the entries in the expected are present" do
             expect(array_including(1,2,3,4,5)).not_to be === [1,2]
+          end
+
+          it "fails when passed a composed matcher is pased and not satisfied" do
+            with_unfulfilled_double do |dbl|
+              expect {
+                klass = Class.new
+                expect(dbl).to receive(:a_message).with(3, array_including(instance_of(klass)))
+                dbl.a_message(3, [1, 4])
+              }.to fail_with(/expected: \(3, array_including\(an_instance_of\(\)\)\)/)
+            end
           end
         end
       end

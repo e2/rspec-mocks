@@ -6,12 +6,6 @@ RSpec.describe "Diffs printed when arguments don't match" do
     allow(RSpec::Mocks.configuration).to receive(:color?).and_return(false)
   end
 
-  def with_unfulfilled_double
-    d = double("double")
-    yield d
-    reset d
-  end
-
   context "with a non matcher object" do
     it "does not print a diff when single line arguments are mismatched" do
       with_unfulfilled_double do |d|

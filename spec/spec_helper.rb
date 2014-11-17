@@ -39,6 +39,12 @@ module VerifyAndResetHelpers
   def reset_all
     RSpec::Mocks.space.reset_all
   end
+
+  def with_unfulfilled_double
+    d = double("double")
+    yield d
+    reset d
+  end
 end
 
 module VerificationHelpers
