@@ -91,10 +91,6 @@ RSpec.describe "Diffs printed when arguments don't match" do
   end
 
   context "with a matcher object" do
-    matcher :fake_matcher do
-      match { false }
-    end
-
     context "that defines #description" do
       it "uses the object's description" do
         with_unfulfilled_double do |d|
