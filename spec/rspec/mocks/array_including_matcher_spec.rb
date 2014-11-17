@@ -7,17 +7,9 @@ module RSpec
         end
 
         it "describes passed matchers" do
-          fake_matcher = Class.new do
-            def self.name
-              "RSpec::Mocks::ArgumentMatchers::"
-            end
-          end.new
+          description = array_including(fake_matcher).description
 
-          expect(fake_matcher).to receive(:description).with(no_args)
-
-          expect(RSpec::Support.is_a_matcher?(fake_matcher)).to be true
-
-          array_including(fake_matcher).description
+          expect(description).to include(MatcherHelpers.fake_matcher_description)
         end
 
         context "passing" do

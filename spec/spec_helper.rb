@@ -54,6 +54,23 @@ module VerificationHelpers
   end
 end
 
+module MatcherHelpers
+  def self.fake_matcher_description
+    "fake_matcher_description"
+  end
+
+  extend RSpec::Matchers::DSL
+
+  matcher :fake_matcher do |expected|
+    match {|actual| actual == expected}
+
+    description do
+      MatcherHelpers.fake_matcher_description
+    end
+  end
+end
+
+
 require 'rspec/support/spec'
 
 RSpec.configure do |config|
@@ -82,6 +99,7 @@ RSpec.configure do |config|
   end
 
   config.include VerifyAndResetHelpers
+  config.include MatcherHelpers
   config.include VerificationHelpers
   config.extend RSpec::Support::RubyFeatures
   config.include RSpec::Support::RubyFeatures
