@@ -244,8 +244,9 @@ module RSpec
         end
 
         def ===(actual)
-          Set.new(@expected).all? do |expected_element|
-            Set.new(actual).any? do |actual_element|
+          actual = actual.uniq
+          @expected.uniq.all? do |expected_element|
+            actual.any? do |actual_element|
               RSpec::Support::FuzzyMatcher.values_match?(expected_element, actual_element)
             end
           end
